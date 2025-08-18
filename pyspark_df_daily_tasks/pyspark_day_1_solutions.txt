@@ -1,0 +1,61 @@
+Foundations : 
+
+>>> # Display all records of employeeDF
+>>> # employeeDF.show()
+>>>
+>>> # Display first three records on employeeDF
+>>> # employeeDF.show(3)
+>>>
+>>> # PrintSchema for employeeDF
+>>> # employeeDF.printSchema()
+>>>
+>>> # Select eid,ename from employeeDF
+>>> # employeeDF.select("eid","ename").show()
+>>>
+>>> # Select eid+5 from employee DF
+>>> # from pyspark.sql.functions import col
+>>> # employeeDF.select(col("eid")+5).show()
+
+
+1. Add new column "salary_increment" by Incrementing the salary by 15% for employee DF 
+
+>>> employeeIncDF = employeeDF.withColumn("salary_increment", col("salary")*1.15)
+>>> employeeIncDF.show()
++---+-----+----+------+----------+-----------------+
+|eid|ename|dept|salary|       doj| salary_increment|
++---+-----+----+------+----------+-----------------+
+|  1|  abc|  DE|   5.8|2017-02-03|6.669999999999999|
+|  2|  xyz| DEV|   6.7|2019-03-09|7.704999999999999|
+|  3|  pqr|  DE|  10.5|2014-05-15|           12.075|
+|  4|  lmn|  HR|   5.9|2018-04-17|            6.785|
+|  5|  qwr|  HR|   6.5|2020-06-26|            7.475|
+|  6|  rst| DEV|   4.6|2016-04-27|5.289999999999999|
++---+-----+----+------+----------+-----------------+
+
+
+2. Add new column "salary_increment" by Incrementing the salary by 15% if salary is greater than 6.0 and Increment by 18% if salary is less thamn 6.0
+
+>>> from pyspark.sql.functions import *
+>>> employeeIncDF = employeeDF.withColumn("salary_increment",
+... when(col("salary")>6.0, col("salary")*1.15).
+... otherwise(col("salary")*1.18))
+>>> employeeIncDF.show()
++---+-----+----+------+----------+-----------------+
+|eid|ename|dept|salary|       doj| salary_increment|
++---+-----+----+------+----------+-----------------+
+|  1|  abc|  DE|   5.8|2017-02-03|6.843999999999999|
+|  2|  xyz| DEV|   6.7|2019-03-09|7.704999999999999|
+|  3|  pqr|  DE|  10.5|2014-05-15|           12.075|
+|  4|  lmn|  HR|   5.9|2018-04-17|            6.962|
+|  5|  qwr|  HR|   6.5|2020-06-26|            7.475|
+|  6|  rst| DEV|   4.6|2016-04-27|5.427999999999999|
++---+-----+----+------+----------+-----------------+
+
+3. Add new column "salary_increment" by incrementing the salary by 
+	30 % if Dept is DE,DEV and salary < 6.0
+	25% if Dept is DE,DEV and salary > 6.0
+	20% if Dept is HR and salary < 6.0
+	18% if Dept is HR and salary > 6.0
+
+
+>>> empDF1 = employeeDF.withColumn("salary_increment", when((((col("dept")=="DE") | (col("dept")=="DEV")) & (col("salary")< 6.0)), col("salary")*1.30).otherwise(when(((col("dept")=="DE") | (col("dept")=="DEV")),col("salary")*1.25).otherwise(col("salary"))))

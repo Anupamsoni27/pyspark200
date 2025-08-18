@@ -1,0 +1,9 @@
+1. For a DF with a date column "event_date", change it to "event_date_time" with timestamp datatype
+
+2. Count distinct "cid" from crDF.
+
+3. Order results by descending revenue column, null values should appear first.
+
+4. Replace all NULL values in revenue column with 50
+
+

@@ -1,0 +1,13 @@
+1. Select ename and increment , increment by 20% if salary is less than 6.0 and increment is 0 for salary greater than 6.0
+
+
+2. Rename "ename" column from employeeDF to "employee_name".
+
+
+3. Change datatype of string column to double
+
+
+4. Create a DF with date datatype column and display date a week before the current_date 
+
+
+

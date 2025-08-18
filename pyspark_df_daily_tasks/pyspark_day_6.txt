@@ -1,0 +1,11 @@
+1. Extract schema freom DF and add column to it
+
+2. Split DF by 60/40 ratio into two new DF's
+
+3. Concatenate two dataframes
+
+4. Replace null values in 'revenue' column with 50.0
+
+5. Add new column to existing DF with current_timestamp
+
+6. Delete dept, doj column from employeeDF 

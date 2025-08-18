@@ -1,0 +1,23 @@
+1. For a DF with a date column "event_date", change it to "event_date_time" with timestamp datatype
+Solution : 
+	i. dateDF1 = dateDF.withColumn("date_col", to_timestamp(col("date_col"),'yyyy-MM-dd')).withColumnRenamed("date_col", "date_time_col")
+
+
+2. Count distinct "cid" from crDF.
+Solutions :
+	i. crDF.select("cid").distinct().agg(count("cid")).show()
+	ii. crDF.selectExpr("count(distinct cid)").show()
+	iii. crDF.select(countDistinct("cid")).show()
+
+
+3. Order results by revenue column, null values should appear first.
+Solutions : 
+	i. crDF.orderBy(desc_nulls_first("revenue")).show()
+	ii. crDF.sort(desc_nulls_first("revenue")).show()
+	iii. crDF.sort(crDF.revenue.desc_nulls_first()).show()
+
+4. Replace all NULL values in revenue column with 50
+Solutions :
+	i. crDF.withColumn("revenue", coalesce(col("revenue"), lit(50))).show()
+
+

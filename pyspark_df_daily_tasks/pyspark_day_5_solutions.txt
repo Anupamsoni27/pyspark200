@@ -1,0 +1,84 @@
+1. Create a DF with Array datatype by explicitly providing schema
+
+
+2. Create a DF with StructType by explicitly providing Schema
+
+
+3. We have following DF,
+
++---+---------+-------+
+| id|    names|revenue|
++---+---------+-------+
+|  1|{a, b, c}|     45|
+|  2|{x, y, z}|     65|
+|  3|{p, q, r}|     54|
++---+---------+-------+
+
+Df's Schema is : 
+root
+ |-- id: integer (nullable = false)
+ |-- names: struct (nullable = false)
+ |    |-- c1: string (nullable = false)
+ |    |-- c2: string (nullable = false)
+ |    |-- c3: string (nullable = false)
+ |-- revenue: integer (nullable = false)
+
+
+Select id,c2 and revenue column from DF.
+
+
+
+4. We have following DF,
+
++---+---------+-------+
+| id|    names|revenue|
++---+---------+-------+
+|  1|[a, b, c]|     45|
+|  2|[x, y, z]|     65|
+|  3|[p, q, r]|     54|
++---+---------+-------+
+
+Df's Schema is,
+root
+ |-- id: string (nullable = false)
+ |-- names: array (nullable = false)
+ |    |-- element: string (containsNull = true)
+ |-- revenue: integer (nullable = false)
+
+
+Select id, 'element at first index of names array' and revenue column from DF.
+
+
+
+5. We have a dataframe as follows :
++---+-----+-------+
+|cid|cname|revenue|
++---+-----+-------+
+|  1|    a|     47|
+|  3|    l|     38|
+|  2|    x|     41|
+|  3|    l|     47|
+|  1|    a|     55|
+|  3|    l|     59|
+|  2|    x|     62|
+|  3|    l|     74|
++---+-----+-------+
+
+Perform transformations so that you can have following output,
++---+--------------------+
+|cid|          collection|
++---+--------------------+
+|  1|  [{a, 47}, {a, 55}]|
+|  3|[{l, 38}, {l, 47}...|
+|  2|  [{x, 41}, {x, 62}]|
++---+--------------------+
+
+Solution :
+	>>> crDF.groupBy("cid").agg(collect_list(struct("cname","revenue")).alias("collection")).show()
+
+
+2. We have following DataFrame, 
+
+	 
+
+

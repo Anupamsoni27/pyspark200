@@ -1,0 +1,33 @@
+1. Extract schema freom DF and add column to it
+
+	>>> df = spark.range(100).toDF("key")
+	>>> df.printSchema()
+	root
+	 |-- key: long (nullable = false)
+	>>> kv_schema = df.schema
+	>>> kv_schema
+	StructType(List(StructField(key,LongType,false)))
+	>>> kv_schema.add("value",IntegerType())
+	StructType(List(StructField(key,LongType,false),StructField(value,IntegerType,true)))
+	>>> kv_schema
+	StructType(List(StructField(key,LongType,false),StructField(value,IntegerType,true)))
+
+2. Split DF by 60/40 ratio into two new DF's
+
+	>>> df1, df2 = df.randomSplit([0.6,0.4])
+
+3. Concatenate two ataframes
+
+	>>> df3 = df1.union(df2)
+
+4. Replace null values in 'revenue' column with 50.0
+
+	>>> crDF.withColumn("cname", expr("ifnull(revenue, 50.0)")).show()
+
+5. Add new column to existing DF with current_timestamp
+	
+	>>> crDF.withColumn("ts", current_timestamp()).show()
+
+6. Delete dept, doj column from employeeDF 
+
+	>>> crDF.drop('cid','revenue').show()

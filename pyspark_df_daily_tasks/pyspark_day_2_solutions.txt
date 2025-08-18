@@ -1,0 +1,60 @@
+1. Select ename and increment , increment by 20% if salary is less than 6.0 and increment is 0 for salary greater than 6.0
+
+Solutions : 
+
+	i. empDF1.selectExpr("ename", "case when (salary < 6.0) then salary*0.20 else 0 end as increment").show()
+
+	ii. empDF1.select("ename", when(col("salary")<6.0,col("salary")*0.20).otherwise(lit(0)).alias("increment")).show()
+
+	iii. employeeDF.select("ename", expr("case when salary<6.0 then salary*0.20 else 0 end as increment")).show()
++-----+------------------+
+|ename|         increment|
++-----+------------------+
+|  abc|              1.16|
+|  xyz|               0.0|
+|  pqr|               0.0|
+|  lmn|1.1800000000000002|
+|  qwr|               0.0|
+|  rst|0.9199999999999999|
++-----+------------------+
+
+
+
+2. Rename "ename" column from employeeDF to "employee_name".
+	
+Solution :
+	eDF = empDF.withColumnRenamed("ename", "employee_name")
+
+
+
+3. Change datatype of string column to double
+>>> employeeDF2 = spark.read.option("header","true").csv(r"file:///C:\Users\Sandeep\Desktop\data\pyspark_DF_and_scenarios\data_day_1_2\employee.txt")
+>>> employeeDF2.printSchema()
+root
+ |-- eid: string (nullable = true)
+ |-- ename: string (nullable = true)
+ |-- dept: string (nullable = true)
+ |-- salary: string (nullable = true)
+ |-- doj: string (nullable = true)
+
+>>> employeeDF3 = employeeDF2.withColumn("eid", col("eid").cast('int')).withColumn("salary", col("salary").cast('double'))
+>>> employeeDF3.printSchema()
+root
+ |-- eid: integer (nullable = true)
+ |-- ename: string (nullable = true)
+ |-- dept: string (nullable = true)
+ |-- salary: double (nullable = true)
+ |-- doj: string (nullable = true)
+
+
+
+4. Create a DF with date datatype column and display date a week before the current_date 
+
+Solutions :
+	>>> past = dDF.withColumn("week_ago", date_sub(col("date_col"),7))
+
+	>>> past = dDF.withColumn("week_ago", col("date_col")-7)
+
+	>>> past = dDF.withColumn("week_ago", expr("date_col -7"))
+
+

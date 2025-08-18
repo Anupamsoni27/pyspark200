@@ -1,0 +1,23 @@
+Foundation :
+- Display all records of employeeDF
+- Display first three records on employeeDF
+- PrintSchema for employeeDF
+- Select eid,ename from employeeDF
+- Select eid+5 from employee DF (col())
+
+1. Add new column "salary_increment" by Incrementing the salary by 15% for employeeDF 
+
+2. Add new column "salary_increment" by Incrementing the salary by 15% if salary is greater than 6.0 and Increment by 18% if salary is less thamn 6.0
+
+3. Add new column "salary_increment" by incrementing the salary by 
+	i. 30 % if Dept is DE,DEV and salary < 6.0
+	   25% if Dept is DE,DEV and salary > 6.0
+	ii.20% if Dept is HR and salary < 6.0
+	   18% if Dept is HR and salary > 6.0
+
+
+
+
+
+
+ 

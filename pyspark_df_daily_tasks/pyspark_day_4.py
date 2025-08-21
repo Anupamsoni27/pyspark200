@@ -1,4 +1,5 @@
 from pyspark.sql import SparkSession
+from pyspark.sql.functions import monotonically_increasing_id, spark_partition_id, when, col, struct, array
 from pyspark.sql.types import StructType, StructField, IntegerType, DateType, DoubleType, StringType
 
 spark = SparkSession.builder.appName('SparkApp').getOrCreate()
@@ -28,8 +29,8 @@ columns1 = ['eid', 'ename', 'dept', 'salary', 'date_of_joining']
 columns3 = ['eid', 'personal_details', 'date_of_joining']
 
 
-df1 = spark.createDataFrame(data1, columns1)
-df1.printSchema()
+employee_df = spark.createDataFrame(data1, columns1)
+employee_df.printSchema()
 
 # with explicit schema
 
@@ -63,16 +64,18 @@ df4.show()
 #  ii. take 10% sample withoutReplacement
 #  iii. take 10% sample using seed
 
-df5 = spark.range(100)
+df5 = spark.range(100).withColumnRenamed('id', 'numbers')
 # df4 = spark.createDataFrame(data4, StructType([StructField('numbers', IntegerType(), True)]))
-df5_sample = df5.sample(withReplacement=False, fraction=0.1, seed=42)
-df5_sample.show()
+# df5_sample = df5.sample(withReplacement=False, fraction=0.1, seed=42)
+# df5_sample.show()
+print(df5.rdd.getNumPartitions())
 # 3. Write expression to add a new column to DF with a unique 64-bit integer ID for all rows.
-
-
+df_with_id = df5.withColumn('_id', monotonically_increasing_id() )
+df_with_id.show()
+df_with_id.withColumn("part_id", spark_partition_id()).show(100)
 # 4. Fill NULL values in DF crDF with some values
-
-
+df_with_id_with_na = df_with_id.withColumn('numbers_check', when(col('numbers') % 10 == 0, None).otherwise(col('numbers')))
+df_with_id_with_na.show()
 # 5. We have a DF which is as follows,
 # +---+-----+----+------+---------------+
 # |eid|ename|dept|salary|date_of_joining|
@@ -95,9 +98,9 @@ df5_sample.show()
 # |  5|  [qwr, HR, 6.5]|     2020-06-26|
 # |  6| [rst, DEV, 4.6]|     2016-04-27|
 # +---+----------------+---------------+
-
+new_employee_df = employee_df.select(col('eid'), array(col('ename'), col('dept'), col('salary')).alias('personal_details'), col('date_of_joining'))
 
 # 6. Select 0th index in personal_details column from employee DF
-
+new_employee_df.select(col('eid'), col('personal_details')[0].alias('name'), col('date_of_joining')).show()
 
 

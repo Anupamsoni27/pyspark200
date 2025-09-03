@@ -10,7 +10,7 @@ spark = SparkSession.builder \
 # Reading data from an XML file into a DataFrame
 # Ensure the spark-xml package is included in your environment for this to work
 df = spark.read.format("xml").option("rowTag", "person").\
-    load(r"C:\Users\Sandeep\PycharmProjects\pyspark200\03_creating_dataFrames\data\A1_resources\persons.xml")
+    load(r"/Users/anupamsoni/PycharmProjects/pyspark200_new/03_creating_dataFrames/A1_Creating_DataFrames_using_Text_Based_formats/data/persons.xml")
 
 # Printing the schema of the DataFrame to understand the structure of the XML data
 df.printSchema()
